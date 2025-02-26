@@ -1,0 +1,36 @@
+{
+    "name": "barbados-large",
+    "description": "Barbados (large)",
+    "download_path": "barbados",
+    "area_lat1": 8,
+    "area_lat2": 18,
+    "area_lon1": -65,
+    "area_lon2": -55,
+    "starttime": [
+        2020,
+        3,
+        1
+    ],
+    "endtime": [
+        2020,
+        4,
+        1
+    ],
+    "item_type": "PSScene",
+    "filters": [
+        {
+            "type": "StringInFilter",
+            "field_name": "instrument",
+            "config": [
+                "PSB.SD"
+            ]
+        },
+        {
+            "type": "RangeFilter",
+            "field_name": "cloud_cover",
+            "config": {
+                "lte": 0.0
+            }
+        }
+    ]
+}
