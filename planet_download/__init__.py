@@ -192,7 +192,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
                 print(f"Asset {id0} is active and ready to download")
             else:
                 print(f"Asset {id0} is not active yet, status: {asset_status}")
-            sleep(5)
+                sleep(5)
 
         print(f"Time taken for activation of {id0}: {dt.datetime.now() - starttime}")
 
@@ -201,7 +201,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         download_link = activation_status_result.json()["location"]
 
         print(f"Download of {id0} started")
-        wget.download(download_link, config["download_path"])
+        wget.download(download_link, config["download_path"], bar=None)
 
         # Parse out useful links
         links_metadata = result.json()["ortho_analytic_8b_xml"]["_links"]
@@ -223,7 +223,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         ################ ! #################
         ####### change the save path #######
         ################ ! #################
-        wget.download(download_link_metadata, config["download_path"])
+        wget.download(download_link_metadata, config["download_path"], bar=None)
 
         print(
             f"Finished {id0}, time taken for download: {dt.datetime.now() - starttime}"
