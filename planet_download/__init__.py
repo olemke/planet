@@ -153,7 +153,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         print(f"{id0} already downloaded")
         return
     else:
-        print(f"{id0} downloading...")
+        print(f"{id0} queued for download")
 
     # Returns JSON metadata for assets in this ID. Learn more: planet.com/docs/reference/data-api/items-assets/#asset
     result = requests.get(id0_url, auth=HTTPBasicAuth(api_key, ""))
@@ -178,18 +178,14 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
                 self_link, auth=HTTPBasicAuth(api_key, "")
             )
 
-            # Assign a variable to the item's assets url response
-            assets = activation_status_result.json()
-
-            # # Assign a variable to the basic_analytic_4b asset from the response
-            # visual = assets["ortho_analytic_8b"]
-
             asset_status = activation_status_result.json()["status"]
 
             # If asset is already active, we are done
             if asset_status == "active":
                 asset_activated = True
                 print(f"Asset {id0} is active and ready to download")
+            elif asset_status == "inactive":
+                print(f"Asset {id0} status is inactive, skipping, rerun script to try again")
             else:
                 print(f"Asset {id0} is not active yet, status: {asset_status}")
                 sleep(5)
