@@ -30,8 +30,6 @@ The GeometryFilter is constructed from the `area_lat1`, `area_lat2`, `area_lon1`
 ## Search/selection
 This script searches for Planet images and saves the results in a JSON file `NAME-results.json` in the current directory. NAME is specified in the `name` field of the configuration file.
 
-To run the script, execute the following command:
-
 ```bash
 python planet-search.py barbados-large-config.json
 ```
@@ -41,10 +39,26 @@ This will create a JSON file called `barbados-large-results.json` in the current
 ## Downloading
 This script downloads the images from the JSON file created by `planet-search.py`.
 
-To run the script, execute the following command:
-
 ```bash
 python planet-download.py barbados-large-results.json
 ```
 
 This will download the images to the `barbados` directory as specified in `barbados-large-config.json`.
+
+## Plotting scripts
+
+### Number of files per day of the year
+
+This script plots a histogram with the number of images found for each day of the year.
+
+```bash
+python plot-histogram.py barbados-large-results.json
+```
+
+### Map of the locations of the found images
+
+This script plots the locations of the images found in the JSON file created by `planet-search.py`.
+
+```bash
+python plot-map.py barbados-large-results.json
+```
