@@ -45,7 +45,7 @@ python planet-download.py barbados-large-results.json
 
 This will download the images to the `barbados` directory as specified in `barbados-large-config.json`.
 
-## Plotting scripts
+## Additional scripts
 
 ### Number of files per day of the year
 
@@ -61,4 +61,12 @@ This script plots the locations of the images found in the JSON file created by 
 
 ```bash
 python plot-map.py barbados-large-results.json
+```
+
+### Area of found images
+
+This script calculates the geodesic the area in km^2 of the images found in the JSON file created by `planet-search.py`.
+
+```bash
+python planet-calculate-area.py barbados-large-results.json
 ```
