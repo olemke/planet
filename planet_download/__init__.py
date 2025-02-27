@@ -190,7 +190,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         starttime = dt.datetime.now()
         waitcycles = 0
         waittime = 10
-        maxcycles = 600 // waittime  # Wait 10 minutes max for activation
+        maxcycles = 900 // waittime  # Maximum time to wait for activation
         retry_failed_activation = True
         while not asset_activated:
             # Send a request to the item's assets url
