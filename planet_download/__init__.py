@@ -203,39 +203,37 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
             # If asset is already active, we are done
             if asset_status == "active":
                 asset_activated = True
-                print(f"Asset {id0} is active and ready to download")
+                print(
+                    f"{id0} is active and ready to download, took {dt.datetime.now() - starttime}"
+                )
             # if the asset is inactive, try activation once again
             elif asset_status == "inactive" and retry_failed_activation:
-                print(f"Asset {id0} status is inactive, retrying activation")
+                print(f"{id0} status is inactive, retrying activation")
                 requests.get(activation_link, auth=HTTPBasicAuth(api_key, ""))
                 retry_failed_activation = False
                 sleep(waittime)
             # give up if asset is still inactive after second activation attempt
             elif asset_status == "inactive" and not retry_failed_activation:
-                print(
-                    f"Asset {id0} status is inactive, skipping, rerun script to try again"
-                )
+                print(f"{id0} status is inactive, skipping, rerun script to try again")
                 return
             # if asset has not activated after maximum waittime, give up
             elif waitcycles >= maxcycles:
                 print(
-                    f"Asset {id0} activation took too long, skipping, rerun script to try again"
+                    f"{id0} activation took too long, skipping, rerun script to try again"
                 )
                 return
             # output status every minute while waiting for activation
             else:
                 if waitcycles % (60 // waittime) == 0:
-                    print(f"Asset {id0} is not active yet, status: {asset_status}")
+                    print(f"{id0} is not active yet, status: {asset_status}")
                 waitcycles += 1
                 sleep(waittime)
-
-        print(f"Time taken for activation of {id0}: {dt.datetime.now() - starttime}")
 
         starttime = dt.datetime.now()
         # Image can be downloaded by making a GET with your Planet API key, from here:
         download_link = activation_status_result.json()["location"]
 
-        print(f"Download of {id0} started")
+        print(f"{id0} download started")
         wget.download(download_link, config["download_path"], bar=None)
 
         # Parse out useful links
@@ -249,12 +247,14 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         activation_status_result_metadata = requests.get(
             self_link_metadata, auth=HTTPBasicAuth(api_key, "")
         )
-        print(activation_status_result_metadata.json()["status"])
+        print(
+            f"{id0} metadata activation status: {activation_status_result_metadata.json()['status']}"
+        )
 
         # Image can be downloaded by making a GET with your Planet API key, from here:
         download_link_metadata = activation_status_result_metadata.json()["location"]
         wget.download(download_link_metadata, config["download_path"], bar=None)
 
         print(
-            f"Finished {id0}, time taken for download: {dt.datetime.now() - starttime}"
+            f"{id0} finished, time taken for download: {dt.datetime.now() - starttime}"
         )
