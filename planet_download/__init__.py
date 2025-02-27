@@ -180,14 +180,18 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         self_link = links["_self"]
         activation_link = links["activate"]
 
-        # Request activation of the 'ortho_analytic_4b' asset:
-        activate_result = requests.get(activation_link, auth=HTTPBasicAuth(api_key, ""))
+        # Request activation of the asset:
+        requests.get(activation_link, auth=HTTPBasicAuth(api_key, ""))
 
         # print(activation_status_result.json()["status"])
 
         asset_activated = False
 
         starttime = dt.datetime.now()
+        waitcycles = 0
+        waittime = 10
+        maxcycles = 600 // waittime  # Wait 10 minutes max for activation
+        retry_failed_activation = True
         while not asset_activated:
             # Send a request to the item's assets url
             activation_status_result = requests.get(
@@ -200,13 +204,30 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
             if asset_status == "active":
                 asset_activated = True
                 print(f"Asset {id0} is active and ready to download")
-            elif asset_status == "inactive":
+            # if the asset is inactive, try activation once again
+            elif asset_status == "inactive" and retry_failed_activation:
+                print(f"Asset {id0} status is inactive, retrying activation")
+                requests.get(activation_link, auth=HTTPBasicAuth(api_key, ""))
+                retry_failed_activation = False
+                sleep(waittime)
+            # give up if asset is still inactive after second activation attempt
+            elif asset_status == "inactive" and not retry_failed_activation:
                 print(
                     f"Asset {id0} status is inactive, skipping, rerun script to try again"
                 )
+                return
+            # if asset has not activated after maximum waittime, give up
+            elif waitcycles >= maxcycles:
+                print(
+                    f"Asset {id0} activation took too long, skipping, rerun script to try again"
+                )
+                return
+            # output status every minute while waiting for activation
             else:
-                print(f"Asset {id0} is not active yet, status: {asset_status}")
-                sleep(5)
+                if waitcycles % (60 // waittime) == 0:
+                    print(f"Asset {id0} is not active yet, status: {asset_status}")
+                waitcycles += 1
+                sleep(waittime)
 
         print(f"Time taken for activation of {id0}: {dt.datetime.now() - starttime}")
 
@@ -223,9 +244,7 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
         activation_link_metadata = links_metadata["activate"]
 
         # Request activation of the 'ortho_analytic_4b' asset:
-        activate_result_metadata = requests.get(
-            activation_link_metadata, auth=HTTPBasicAuth(api_key, "")
-        )
+        requests.get(activation_link_metadata, auth=HTTPBasicAuth(api_key, ""))
 
         activation_status_result_metadata = requests.get(
             self_link_metadata, auth=HTTPBasicAuth(api_key, "")
@@ -234,9 +253,6 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
 
         # Image can be downloaded by making a GET with your Planet API key, from here:
         download_link_metadata = activation_status_result_metadata.json()["location"]
-        ################ ! #################
-        ####### change the save path #######
-        ################ ! #################
         wget.download(download_link_metadata, config["download_path"], bar=None)
 
         print(
