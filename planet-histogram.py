@@ -7,10 +7,13 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import planet_download as planet
+
 
 def plot_histogram(filename):
     with open(filename, "r") as f:
         items = json.load(f)
+    name = planet.get_config_basename(filename)
 
     timestamps = [
         datetime.strptime(ts["properties"]["acquired"], "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -26,7 +29,7 @@ def plot_histogram(filename):
     ax.set_ylabel("Number of images")
     ax.set_xlabel("Day of year")
 
-    fig.savefig(items["config"]["name"] + "-histogram.pdf", dpi=300)
+    fig.savefig(name + "-histogram.pdf", dpi=300)
 
     plt.show()
 

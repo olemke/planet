@@ -8,6 +8,12 @@ import wget
 from requests.auth import HTTPBasicAuth
 
 
+def get_config_basename(configfile):
+    return (
+        configfile.replace("-config", "").replace("-results", "").replace(".json", "")
+    )
+
+
 def create_geometry_filter(lat1, lat2, lon1, lon2):
     geojson_geometry = {
         "type": "Polygon",
@@ -185,7 +191,9 @@ def download_image(id0, config, api_key=os.getenv("PL_API_KEY")):
                 asset_activated = True
                 print(f"Asset {id0} is active and ready to download")
             elif asset_status == "inactive":
-                print(f"Asset {id0} status is inactive, skipping, rerun script to try again")
+                print(
+                    f"Asset {id0} status is inactive, skipping, rerun script to try again"
+                )
             else:
                 print(f"Asset {id0} is not active yet, status: {asset_status}")
                 sleep(5)

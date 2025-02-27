@@ -14,6 +14,7 @@ import planet_download as planet
 def plot_map(filename):
     with open(filename, "r") as f:
         items = json.load(f)
+    name = planet.get_config_basename(filename)
 
     locations = [Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]]
 
@@ -53,7 +54,7 @@ def plot_map(filename):
     ax.set_ylabel("Latitude")
     ax.set_title(f"{items['config']['description']} ({len(locations)} images)")
 
-    fig.savefig(items["config"]["name"] + "-map.pdf", dpi=300)
+    fig.savefig(name + "-map.pdf", dpi=300)
 
     plt.show()
 

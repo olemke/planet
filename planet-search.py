@@ -10,13 +10,15 @@ if len(sys.argv) != 2:
     print(f"Usage: {sys.argv[0]} CONFIG.json")
     exit(1)
 
-with open(sys.argv[1], "r") as f:
+configfile = sys.argv[1]
+with open(configfile, "r") as f:
     config = json.load(f)
+name = planet.get_config_basename(configfile)
 
 items = planet.build_filelist(config)
 
 n_images = len(items)
 print(f"{n_images} images selected")
 
-with open(config["name"] + "-results.json", "w") as f:
+with open(name + "-results.json", "w") as f:
     json.dump({"config": config, "results": items}, f)

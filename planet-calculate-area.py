@@ -12,7 +12,8 @@ if __name__ == "__main__":
         print(f"Usage: {sys.argv[0]} SEARCH_RESULTS_FILE.json")
         exit(1)
 
-    with open(sys.argv[1], "r") as f:
+    resultsfile = sys.argv[1]
+    with open(resultsfile, "r") as f:
         items = json.load(f)
 
     locations = [Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]]
