@@ -14,6 +14,16 @@ def get_config_basename(configfile):
     )
 
 
+def calc_total_area(items):
+    from pyproj import Geod
+    from shapely.geometry.polygon import Polygon
+
+    locations = [Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]]
+
+    geod = Geod(ellps="WGS84")
+    return sum(abs(geod.geometry_area_perimeter(loc)[0]) for loc in locations)
+
+
 def create_geometry_filter(lat1, lat2, lon1, lon2):
     geojson_geometry = {
         "type": "Polygon",
