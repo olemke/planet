@@ -38,7 +38,7 @@ def plot_map(filename):
         rasterized=True,
     )
     ax.add_geometries(
-        Polygon(planet.get_polygon_from_config(items["config"])),
+        [Polygon(planet.get_polygon_from_config(items["config"]))],
         crs=ccrs.PlateCarree(),
         facecolor="None",
         edgecolor="#4444DD",
