@@ -71,7 +71,7 @@ python plot-map.py barbados-large-results.json [-d]
 
 ### Area of found images
 
-This script calculates the geodesic the area in km^2 of the images found in the JSON file created by `planet-search.py`.
+This script calculates the geodesic area in km^2 of the images found in the JSON file created by `planet-search.py`.
 
 ```bash
 python planet-calculate-area.py barbados-large-results.json
