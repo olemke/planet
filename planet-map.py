@@ -11,12 +11,21 @@ from shapely.geometry.polygon import Polygon
 import planet_download as planet
 
 
-def plot_map(filename):
+def plot_map(filename, only_downloaded=False):
     with open(filename, "r") as f:
         items = json.load(f)
     name = planet.get_config_basename(filename)
 
-    locations = [Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]]
+    if only_downloaded:
+        locations = [
+            Polygon(ts["geometry"]["coordinates"][0])
+            for ts in items["results"]
+            if planet.check_existence(ts["id"], items["config"]["download_path"])
+        ]
+    else:
+        locations = [
+            Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]
+        ]
 
     fig, ax = plt.subplots(subplot_kw={"projection": ccrs.PlateCarree()})
     ax.set_extent(
@@ -62,8 +71,13 @@ def plot_map(filename):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} SEARCH_RESULTS_FILE.json")
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} SEARCH_RESULTS_FILE.json [-d]")
+        print("")
+        print("     -d  Only plot downloaded images")
         exit(1)
 
-    plot_map(sys.argv[1])
+    only_downloaded = False
+    if len(sys.argv) > 2 and sys.argv[2] == "-d":
+        only_downloaded = True
+    plot_map(sys.argv[1], only_downloaded)
