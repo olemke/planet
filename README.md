@@ -63,10 +63,11 @@ python plot-histogram.py barbados-large-results.json [-d]
 This script plots the locations of the images found in the JSON file created by `planet-search.py`.
 
 ```bash
-python plot-map.py barbados-large-results.json [-d]
+python plot-map.py barbados-large-results.json [-d] [-m]
 ```
 
-`-d` as a second parameter will only plot locations for already downloaded images.
+Passing `-d` will only plot locations for already downloaded images.
+Data is grouped by default by day of year, pass `-m` to group by month.
 
 ### Area of found images
 
