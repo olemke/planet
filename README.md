@@ -40,10 +40,12 @@ This will create a JSON file called `barbados-large-results.json` in the current
 This script downloads the images from the JSON file created by `planet-search.py`.
 
 ```bash
-python planet-download.py barbados-large-results.json
+python planet-download.py barbados-large-results.json [-r]
 ```
 
 This will download the images to the `barbados` directory as specified in `barbados-large-config.json`.
+
+`-r` can be added as a second parameter to download images in random order.
 
 ## Additional scripts
 
@@ -52,16 +54,20 @@ This will download the images to the `barbados` directory as specified in `barba
 This script plots a histogram with the number of images found for each day of the year.
 
 ```bash
-python plot-histogram.py barbados-large-results.json
+python plot-histogram.py barbados-large-results.json [-d]
 ```
+
+`-d` as a second paramter will only respect already download images for the statistics.
 
 ### Map of the locations of the found images
 
 This script plots the locations of the images found in the JSON file created by `planet-search.py`.
 
 ```bash
-python plot-map.py barbados-large-results.json
+python plot-map.py barbados-large-results.json [-d]
 ```
+
+`-d` as a second parameter will only plot locations for already downloaded images.
 
 ### Area of found images
 
