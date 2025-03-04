@@ -50,8 +50,9 @@ def plot_map(filename, only_downloaded=False):
         [Polygon(planet.get_polygon_from_config(items["config"]))],
         crs=ccrs.PlateCarree(),
         facecolor="None",
-        edgecolor="#4444DD",
+        edgecolor="#66AA44",
         alpha=0.8,
+        lw=2,
         rasterized=True,
     )
 
