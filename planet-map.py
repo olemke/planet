@@ -17,37 +17,45 @@ def plot_map(filename, only_downloaded=False):
     name = planet.get_config_basename(filename)
 
     if only_downloaded:
+        config = items["config"]
         locations = [
             Polygon(ts["geometry"]["coordinates"][0])
             for ts in items["results"]
             if planet.check_existence(ts["id"], items["config"]["download_path"])
         ]
     else:
-        locations = [
-            Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]
-        ]
+        if "results" in items:
+            config = items["config"]
+            locations = [
+                Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]
+            ]
+        else:
+            config = items
+            locations = []
 
     fig, ax = plt.subplots(subplot_kw={"projection": ccrs.PlateCarree()})
     ax.set_extent(
         [
-            items["config"]["area_lon1"] - 1,
-            items["config"]["area_lon2"] + 1,
-            items["config"]["area_lat1"] - 1,
-            items["config"]["area_lat2"] + 1,
+            config["area_lon1"] - 1,
+            config["area_lon2"] + 1,
+            config["area_lat1"] - 1,
+            config["area_lat2"] + 1,
         ],
         crs=ccrs.PlateCarree(),
     )
 
+    if locations:
+        ax.add_geometries(
+            locations,
+            crs=ccrs.PlateCarree(),
+            facecolor="None",
+            edgecolor="#DD4444",
+            alpha=0.8,
+            rasterized=True,
+        )
+
     ax.add_geometries(
-        locations,
-        crs=ccrs.PlateCarree(),
-        facecolor="None",
-        edgecolor="#DD4444",
-        alpha=0.8,
-        rasterized=True,
-    )
-    ax.add_geometries(
-        [Polygon(planet.get_polygon_from_config(items["config"]))],
+        [Polygon(planet.get_polygon_from_config(config))],
         crs=ccrs.PlateCarree(),
         facecolor="None",
         edgecolor="#66AA44",
@@ -62,7 +70,7 @@ def plot_map(filename, only_downloaded=False):
 
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
-    ax.set_title(f"{items['config']['description']} ({len(locations)} images)")
+    ax.set_title(f"{config['description']} ({len(locations)} images)")
 
     fig.savefig(name + "-map.pdf", dpi=300)
 
