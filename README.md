@@ -11,7 +11,6 @@ export PL_API_KEY="YOUR_API_KEY"
 ## Configuration
 The scripts require a configuration file in JSON format. The configuration file should contain the following fields:
 
-- `name`: name of the configuration
 - `description`: description of the configuration, used as title in plotting scripts
 - `download_path`: path to the directory where the images will be downloaded, absolute or relative to the current directory
 - `area_lat1`: latitude of the top left corner of the area
