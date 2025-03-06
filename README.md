@@ -56,7 +56,8 @@ This script plots a histogram with the number of images found for each day of th
 python plot-histogram.py barbados-large-results.json [-d]
 ```
 
-`-d` as a second paramter will only respect already download images for the statistics.
+`-d` as a second paramter will also show downloaded images in the histogram.
+Data is grouped by default by day of year, pass `-m` to group by month.
 
 ### Map of the locations of the found images
 
@@ -66,8 +67,7 @@ This script plots the locations of the images found in the JSON file created by 
 python plot-map.py barbados-large-results.json [-d] [-m]
 ```
 
-Passing `-d` will only plot locations for already downloaded images.
-Data is grouped by default by day of year, pass `-m` to group by month.
+Passing `-d` will plot both downloaded and available images in two separate subplots.
 
 ### Area of found images
 
