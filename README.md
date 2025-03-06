@@ -53,7 +53,7 @@ This will download the images to the `barbados` directory as specified in `barba
 This script plots a histogram with the number of images found for each day of the year.
 
 ```bash
-python plot-histogram.py barbados-large-results.json [-d]
+python planet-histogram.py barbados-large-results.json [-d]
 ```
 
 `-d` as a second paramter will also show downloaded images in the histogram.
@@ -64,7 +64,7 @@ Data is grouped by default by day of year, pass `-m` to group by month.
 This script plots the locations of the images found in the JSON file created by `planet-search.py`.
 
 ```bash
-python plot-map.py barbados-large-results.json [-d] [-m]
+python planet-map.py barbados-large-results.json [-d] [-m]
 ```
 
 Passing `-d` will plot both downloaded and available images in two separate subplots.
