@@ -18,11 +18,6 @@ def plot_histogram(filename, downloaded=False, granularity="day"):
         items = json.load(f)
     name = planet.get_config_basename(filename)
 
-    timestamps_dl = [
-        datetime.strptime(ts["properties"]["acquired"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        for ts in items["results"]
-        if planet.check_existence(ts["id"], items["config"]["download_path"])
-    ]
     timestamps = [
         datetime.strptime(ts["properties"]["acquired"], "%Y-%m-%dT%H:%M:%S.%fZ")
         for ts in items["results"]
@@ -35,6 +30,11 @@ def plot_histogram(filename, downloaded=False, granularity="day"):
         counts = df.groupby(df["timestamp"].dt.month)
 
     if downloaded:
+        timestamps_dl = [
+            datetime.strptime(ts["properties"]["acquired"], "%Y-%m-%dT%H:%M:%S.%fZ")
+            for ts in items["results"]
+            if planet.check_existence(ts["id"], items["config"]["download_path"])
+        ]
         df_dl = pd.DataFrame(timestamps_dl, columns=["timestamp"])
         if granularity == "day":
             counts_dl = df_dl.groupby(df_dl["timestamp"].dt.dayofyear)
