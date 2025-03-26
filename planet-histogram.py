@@ -30,10 +30,11 @@ def plot_histogram(filename, downloaded=False, granularity="day"):
         counts = df.groupby(df["timestamp"].dt.month)
 
     if downloaded:
+        filelist = planet.get_filelist(items["config"]["download_path"])
         timestamps_dl = [
             datetime.strptime(ts["properties"]["acquired"], "%Y-%m-%dT%H:%M:%S.%fZ")
             for ts in items["results"]
-            if planet.check_existence(ts["id"], items["config"]["download_path"])
+            if planet.check_in_filelist(ts["id"], filelist)
         ]
         df_dl = pd.DataFrame(timestamps_dl, columns=["timestamp"])
         if granularity == "day":
@@ -59,7 +60,7 @@ def plot_histogram(filename, downloaded=False, granularity="day"):
     ax.set_ylabel("Number of images")
     ax.set_xlabel(f"By {granularity}")
 
-    fig.savefig(name + "-histogram.pdf", dpi=300)
+    fig.savefig(name + "-histogram.svg", dpi=300)
 
     plt.show()
 

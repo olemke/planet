@@ -152,6 +152,14 @@ def search(config, api_key=os.getenv("PL_API_KEY"), starttime=None, endtime=None
     return search_result.json()["features"]
 
 
+def get_filelist(download_path):
+    return glob(os.path.join(download_path, "*.tif"))
+
+
+def check_in_filelist(id0, filelist):
+    return len([s for s in filelist if id0 in s])
+
+
 def check_existence(id0, download_path):
     return len(glob(os.path.join(download_path, id0) + "*.[xt][mi][lf]")) == 2
 

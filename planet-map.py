@@ -60,11 +60,13 @@ def plot_map(filename, downloaded=False):
 
     if downloaded and "results" in items:
         config = items["config"]
+        filelist = planet.get_filelist(items["config"]["download_path"])
         locations_dl = [
             Polygon(ts["geometry"]["coordinates"][0])
             for ts in items["results"]
-            if planet.check_existence(ts["id"], items["config"]["download_path"])
+            if planet.check_in_filelist(ts["id"], filelist)
         ]
+        print(len(locations_dl), "images downloaded")
     else:
         downloaded = False
 
@@ -73,9 +75,11 @@ def plot_map(filename, downloaded=False):
         locations = [
             Polygon(ts["geometry"]["coordinates"][0]) for ts in items["results"]
         ]
+        print(len(locations), "images available")
     else:
         config = items
         locations = []
+
 
     if downloaded:
         fig, (ax1, ax2) = plt.subplots(
@@ -99,7 +103,7 @@ def plot_map(filename, downloaded=False):
         fig, ax = plt.subplots(subplot_kw={"projection": ccrs.PlateCarree()})
         plot_footprints(config, locations, ax)
 
-    fig.savefig(name + "-map.pdf", dpi=300)
+    fig.savefig(name + "-map.svg", dpi=300)
 
     plt.show()
 
